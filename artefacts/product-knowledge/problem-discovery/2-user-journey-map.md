@@ -1,9 +1,9 @@
-| « [Prev](./1-product-discovery.md) | [Next](./3-problem-scenarios-use-cases.md) » |
-| --- | --- |
+| « [Prev](./1-product-discovery.md) | [🏠︎](../README.md) | [Next](./3-problem-scenarios-use-cases.md) » |
+| --- | --- | --- |
 
 ---
 
-# User Journey Map
+# 😊 User Journey Map
 
 This User Journey Map outlines how applicants and coordinators currently navigate the visa preparation process, highlighting pain points, emotions, and opportunities for improvement. It focuses on the real-world behaviors and challenges that the product must address.
 
@@ -65,5 +65,6 @@ These opportunities directly inform the MVP and future features.
 * Provide a shared timeline for external status.
 
 ---
-| « [Prev](./1-product-discovery.md) | [Next](./3-problem-scenarios-use-cases.md) » |
-| --- | --- |
+
+| « [Prev](./1-product-discovery.md) | [🏠︎](../README.md) | [Next](./3-problem-scenarios-use-cases.md) » |
+| --- | --- | --- |

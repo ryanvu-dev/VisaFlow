@@ -1,5 +1,5 @@
-| « [Prev](./3-problem-scenarios-use-cases.md) | Next » |
-| --- | --- |
+| « [Prev](./3-problem-scenarios-use-cases.md) | [🏠︎](../README.md) | Next » |
+| --- | --- | --- |
 
 ---
 
@@ -50,5 +50,6 @@ This storyboard is the final step in Product Discovery before moving into **Solu
 You are now ready to transition into design and implementation.
 
 ---
-| « [Prev](./3-problem-scenarios-use-cases.md) | Next » |
-| --- | --- |
+
+| « [Prev](./3-problem-scenarios-use-cases.md) | [🏠︎](../README.md) | Next » |
+| --- | --- | --- |

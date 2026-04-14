@@ -1,9 +1,9 @@
-| « [Prev](./2-user-journey-map.md) | [Next](./4-mvp-storyboard.md) » |
-| --- | --- |
+| « [Prev](./2-user-journey-map.md) | [🏠︎](../README.md) | [Next](./4-mvp-storyboard.md) » |
+| --- | --- | --- |
 
 ---
 
-# Problem Scenarios & Use Cases
+# 🧩 Problem Scenarios & Use Cases
 
 ## 1. Problem Scenarios
 
@@ -134,5 +134,6 @@ Structured descriptions of how users interact with the system.
 These scenarios and use cases ensure the product supports real-world behaviours and challenges. They validate the MVP scope and prepare the foundation for the next discovery documents: Opportunity Mapping, Validation Planning, and MVP Storyboarding.
 
 ---
-| « [Prev](./2-user-journey-map.md) | [Next](./4-mvp-storyboard.md) » |
-| --- | --- |
+
+| « [Prev](./2-user-journey-map.md) | [🏠︎](../README.md) | [Next](./4-mvp-storyboard.md) » |
+| --- | --- | --- |

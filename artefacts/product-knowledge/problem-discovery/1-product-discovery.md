@@ -1,9 +1,9 @@
-| « Prev | [Next](./2-user-journey-map.md) » |
-| --- | --- |
+| « Prev | [🏠︎](../README.md) | [Next](./2-user-journey-map.md) » |
+| --- | --- | --- |
 
 ---
 
-# Project Discovery 
+# 🔭 Product Discovery 
 
 ## 1. Problem Definition
 A coordinator living abroad often assists family members (the applicants) with visa applications required for visiting Australia. The applicants are unfamiliar with visa requirements, document standards, and the overall process. The coordinator must repeatedly explain steps, request documents, correct mistakes, and track progress manually across fragmented channels (messaging apps, email, calls). This leads to delays, stress, and inefficiency.
@@ -137,5 +137,5 @@ Every interaction should be obvious, visible, and linear.
 
 ---
 
-| « Prev | [Next](./2-user-journey-map.md) » |
-| --- | --- |
+| « Prev | [🏠︎](../README.md) | [Next](./2-user-journey-map.md) » |
+| --- | --- | --- |
