@@ -3,7 +3,7 @@
 
 ---
 
-# MVP Storyboard
+# 🧪 MVP Storyboard
 
 This storyboard illustrates the **end-to-end experience** of the MVP for both the **Applicant** and the **Coordinator**. It visualises the “happy path” — the simplest, most successful flow — without adding complexity or non‑MVP features.
 
