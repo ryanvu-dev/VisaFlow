@@ -131,7 +131,7 @@ Structured descriptions of how users interact with the system.
 
 ## 3. Summary
 
-These scenarios and use cases ensure the product supports real-world behaviours and challenges. They validate the MVP scope and prepare the foundation for the next discovery documents: Opportunity Mapping, Validation Planning, and MVP Storyboarding.
+These scenarios and use cases ensure the product supports real-world behaviours and challenges. They validate the MVP scope and prepare the foundation for the next discovery document: MVP Storyboarding.
 
 ---
 
