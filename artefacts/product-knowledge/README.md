@@ -1,5 +1,5 @@
-| 📖 | [DevOps Setup](../devops-setup.md) |
-| --- | --- |
+| 📖 | [Project Setup](../docs/project-setup.md) | [DevOps Setup](../docs/devops-setup.md) |
+| --- | --- | --- |
 
 ---
 
@@ -48,5 +48,5 @@
 
 ---
 
-| 📖 | [DevOps Setup](../devops-setup.md) |
-| --- | --- |
+| 📖 | [Project Setup](../docs/project-setup.md) | [DevOps Setup](../docs/devops-setup.md) |
+| --- | --- | --- |
