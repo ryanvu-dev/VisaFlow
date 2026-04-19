@@ -5,6 +5,10 @@
 
 # 🧩 Problem Scenarios & Use Cases
 
+![problem-discovery-banner](../../banners/problem-discovery-banner.png)
+
+<br/>
+
 ## 1. Problem Scenarios
 
 Narrative descriptions of real situations that occur during visa preparation. These scenarios highlight pain points, user behaviours, and system requirements.
@@ -31,7 +35,7 @@ Narrative descriptions of real situations that occur during visa preparation. Th
 
 | Situation | Applicant sends documents randomly (passport, then employment letter, then photo). |
 |:-----------|:----------------------------------------------------------------------------------|
-| Pain Points | - Coordinator must reorganize manually.<br>- Hard to track what belongs to which requirement. |
+| Pain Points | - Coordinator must reorganise manually.<br>- Hard to track what belongs to which requirement. |
 | Implication for Product | - Step-based document upload.<br>- Structured workflow. |
 
 ---

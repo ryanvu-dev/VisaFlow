@@ -5,13 +5,17 @@
 
 # 🧪 MVP Storyboard
 
+![problem-discovery-banner](../../banners/problem-discovery-banner.png)
+
+<br/>
+
 This storyboard illustrates the **end-to-end experience** of the MVP for both the **Applicant** and the **Coordinator**. It visualises the “happy path” — the simplest, most successful flow — without adding complexity or non‑MVP features.
 
 The goal is to show how the MVP works as a guided, linear workflow.
 
 ---
 
-## Applicant Storyboard
+## 1. Applicant Storyboard
 
 | Step                 | Applicant Actions                                                                 | Status / Notes                                             |
 |----------------------|----------------------------------------------------------------------------------|------------------------------------------------------------|
@@ -24,7 +28,7 @@ The goal is to show how the MVP works as a guided, linear workflow.
 
 ---
 
-## Coordinator Storyboard
+## 2. Coordinator Storyboard
 
 | Step                   | Coordinator Actions                                                             | Status / Notes                                             |
 |------------------------|--------------------------------------------------------------------------------|------------------------------------------------------------|
@@ -36,7 +40,7 @@ The goal is to show how the MVP works as a guided, linear workflow.
 
 ---
 
-## Storyboard Summary
+## 3. Storyboard Summary
 
 This storyboard shows the simplest version of the product that still delivers value:
 

@@ -5,6 +5,10 @@
 
 # 🔭 Product Discovery 
 
+![product-discovery-banner](../../banners/problem-discovery-banner.png)
+
+<br/>
+
 ## 1. Problem Definition
 A coordinator living abroad often assists family members (the applicants) with visa applications required for visiting Australia. The applicants are unfamiliar with visa requirements, document standards, and the overall process. The coordinator must repeatedly explain steps, request documents, correct mistakes, and track progress manually across fragmented channels (messaging apps, email, calls). This leads to delays, stress, and inefficiency.
 
@@ -16,19 +20,19 @@ There is no simple, intuitive workflow for applicants to follow, nor a structure
 ## 2. Users & Stakeholders
 
 ### Primary Users (Applicants)
-- Moderate tech literacy  
-- Comfortable with basic office apps  
-- Require clarity, visibility, and simplicity  
-- Prefer linear, guided workflows  
+* Moderate tech literacy  
+* Comfortable with basic office apps  
+* Require clarity, visibility, and simplicity  
+* Prefer linear, guided workflows  
 
 ### Secondary User (Coordinator)
-- Understands visa requirements  
-- Responsible for collecting documents and information  
-- Needs structured review, tracking, and communication  
+* Understands visa requirements  
+* Responsible for collecting documents and information  
+* Needs structured review, tracking, and communication  
 
 ### External Stakeholders
-- Immigration authorities (requirements and constraints)  
-- Potential future applicants (extended family)
+* Immigration authorities (requirements and constraints)  
+* Potential future applicants (extended family)
 
 ---
 
@@ -43,10 +47,10 @@ There is no simple, intuitive workflow for applicants to follow, nor a structure
 ---
 
 ## 4. Current Alternatives
-- Messaging apps for sending documents  
-- Manual explanations  
-- Scattered uploads  
-- Spreadsheets or mental tracking  
+* Messaging apps for sending documents  
+* Manual explanations  
+* Scattered uploads  
+* Spreadsheets or mental tracking  
 
 **Why these fail:**  
 No structure, no single source of truth, no progress visibility, high cognitive load, and repeated work.
@@ -56,54 +60,54 @@ No structure, no single source of truth, no progress visibility, high cognitive 
 ## 5. Value Proposition
 
 ### Functional
-- Clear, guided workflow  
-- Step-by-step instructions  
-- Document upload and review  
-- Progress tracking  
-- Notes and corrections  
+* Clear, guided workflow  
+* Step-by-step instructions  
+* Document upload and review  
+* Progress tracking  
+* Notes and corrections  
 
 ### Emotional
-- Applicants feel confident and supported  
-- Coordinator experiences reduced stress  
-- Everyone gains clarity and control  
+* Applicants feel confident and supported  
+* Coordinator experiences reduced stress  
+* Everyone gains clarity and control  
 
 ### Economic
-- Faster submissions  
-- Fewer mistakes  
-- Less time wasted  
+* Faster submissions  
+* Fewer mistakes  
+* Less time wasted  
 
 ---
 
 ## 6. Success Metrics
 
 ### Leading Indicators
-- Applicants complete steps independently  
-- Reduced back-and-forth communication  
-- Faster document collection  
-- Higher step completion rate  
+* Applicants complete steps independently  
+* Reduced back-and-forth communication  
+* Faster document collection  
+* Higher step completion rate  
 
 ### Lagging Indicators
-- Earlier visa submissions  
-- Less time spent per application  
-- Positive usability feedback  
+* Earlier visa submissions  
+* Less time spent per application  
+* Positive usability feedback  
 
 ---
 
 ## 7. Risks & Assumptions
 
 ### Desirability Risks
-- Applicants may default to messaging  
-- Applicants may forget to use the app  
-- Login friction  
+* Applicants may default to messaging  
+* Applicants may forget to use the app  
+* Login friction  
 
 ### Feasibility Risks
-- Secure document storage  
-- Multi-language support  
-- Mobile usability  
+* Secure document storage  
+* Multi-language support  
+* Mobile usability  
 
 ### Viability Risks
-- Initially limited to a single coordinator and family group  
-- Long-term maintenance  
+* Initially limited to a single coordinator and family group  
+* Long-term maintenance  
 
 ---
 
@@ -113,19 +117,19 @@ No structure, no single source of truth, no progress visibility, high cognitive 
 A simple, intuitive web application that guides applicants through visa preparation and enables the coordinator to collect required information and documents efficiently.
 
 ### MVP Features
-- Simple onboarding (magic link or access code)  
-- Step-by-step workflow  
-- Document upload (supports mobile photos)  
-- Progress tracker  
-- Notes/comments for corrections  
-- Optional reminders  
+* Simple onboarding (magic link or access code)  
+* Step-by-step workflow  
+* Document upload (supports mobile photos)  
+* Progress tracker  
+* Notes/comments for corrections  
+* Optional reminders  
 
 ### Explicitly Excluded (for MVP)
-- Full visa submission  
-- Complex user roles  
-- Payments  
-- AI document analysis  
-- Advanced automation  
+* Full visa submission  
+* Complex user roles  
+* Payments  
+* AI document analysis  
+* Advanced automation  
 
 ---
 
