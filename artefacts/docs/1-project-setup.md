@@ -1,4 +1,4 @@
-| 📖 | [DevOps Setup](../docs/devops-setup.md)| [Product Knowledge](../product-knowledge/README.md) |
+| « Prev | [🏠︎](./README.md) | [Next](./2-devops-setup.md) » |
 | --- | --- | --- |
 
 ---
@@ -91,5 +91,5 @@ By default, frontend runs at:
 
 ---
 
-| 📖 | [Devops Setup](../docs/devops-setup.md) | [Product Knowledge](../product-knowledge/README.md) |
+| « Prev | [🏠︎](./README.md) | [Next](./2-devops-setup.md) » |
 | --- | --- | --- |

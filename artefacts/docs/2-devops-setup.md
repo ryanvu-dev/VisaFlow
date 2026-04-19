@@ -1,4 +1,4 @@
-| 📖 | [Project Setup](../docs/project-setup.md)| [Product Knowledge](../product-knowledge/README.md) |
+| « [Prev](./1-project-setup.md) | [🏠︎](./README.md) | Next » |
 | --- | --- | --- |
 
 ---
@@ -124,5 +124,5 @@ Below is the complete deployment setup for VisaFlow using Render (backend + DB) 
 
 ---
 
-| 📖 | [Project Setup](../docs/project-setup.md)| [Product Knowledge](../product-knowledge/README.md) |
+| « [Prev](./1-project-setup.md) | [🏠︎](./README.md) | Next » |
 | --- | --- | --- |
