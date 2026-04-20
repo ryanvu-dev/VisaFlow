@@ -36,7 +36,7 @@ flowchart TD
 ```
 
 </div>
-<br>
+<br/>
 
 This diagram represents **dependency direction**, not execution flow.
 

@@ -17,8 +17,8 @@ Narrative descriptions of real situations that occur during visa preparation. Th
 
 | Situation | Applicant takes a passport photo at night using their phone and sends it via a messaging app. |
 |:-----------|:--------------------------------------------------------------------------------------------|
-| Pain Points | - Coordinator cannot use the image.<br>- Applicant doesn’t understand why it’s unacceptable.<br>- Multiple rounds of resubmission. |
-| Implication for Product | - Clear document requirements.<br>- Ability to request corrections with notes.<br>- Support for re-uploading. |
+| Pain Points | - Coordinator cannot use the image.<br/>- Applicant doesn’t understand why it’s unacceptable.<br/>- Multiple rounds of resubmission. |
+| Implication for Product | - Clear document requirements.<br/>- Ability to request corrections with notes.<br/>- Support for re-uploading. |
 
 ---
 
@@ -26,8 +26,8 @@ Narrative descriptions of real situations that occur during visa preparation. Th
 
 | Situation | Applicant sends some documents but forgets others, unsure what remains. |
 |:-----------|:------------------------------------------------------------------------|
-| Pain Points | - Confusion.<br>- Coordinator must remind them manually. |
-| Implication for Product | - Visible progress tracker.<br>- Clear next-step guidance. |
+| Pain Points | - Confusion.<br/>- Coordinator must remind them manually. |
+| Implication for Product | - Visible progress tracker.<br/>- Clear next-step guidance. |
 
 ---
 
@@ -35,8 +35,8 @@ Narrative descriptions of real situations that occur during visa preparation. Th
 
 | Situation | Applicant sends documents randomly (passport, then employment letter, then photo). |
 |:-----------|:----------------------------------------------------------------------------------|
-| Pain Points | - Coordinator must reorganise manually.<br>- Hard to track what belongs to which requirement. |
-| Implication for Product | - Step-based document upload.<br>- Structured workflow. |
+| Pain Points | - Coordinator must reorganise manually.<br/>- Hard to track what belongs to which requirement. |
+| Implication for Product | - Step-based document upload.<br/>- Structured workflow. |
 
 ---
 
@@ -44,8 +44,8 @@ Narrative descriptions of real situations that occur during visa preparation. Th
 
 | Situation | Applicant answers some questions but skips others. |
 |:-----------|:----------------------------------------------------|
-| Pain Points | - Coordinator must chase missing details.<br>- Applicant doesn’t know what’s required. |
-| Implication for Product | - Required fields.<br>- Validation before submission. |
+| Pain Points | - Coordinator must chase missing details.<br/>- Applicant doesn’t know what’s required. |
+| Implication for Product | - Required fields.<br/>- Validation before submission. |
 
 ---
 
@@ -53,8 +53,8 @@ Narrative descriptions of real situations that occur during visa preparation. Th
 
 | Situation | Coordinator sends correction notes, but applicant doesn’t see them immediately. |
 |:-----------|:--------------------------------------------------------------------------------|
-| Pain Points | - Delays.<br>- Coordinator must follow up. |
-| Implication for Product | - Notifications.<br>- Clear correction loop. |
+| Pain Points | - Delays.<br/>- Coordinator must follow up. |
+| Implication for Product | - Notifications.<br/>- Clear correction loop. |
 
 ---
 
@@ -62,8 +62,8 @@ Narrative descriptions of real situations that occur during visa preparation. Th
 
 | Situation | After submission, immigration asks for extra evidence. |
 |:-----------|:---------------------------------------------------------|
-| Pain Points | - No structured way to collect new documents.<br>- Applicant confused about urgency. |
-| Implication for Product | - Temporary steps.<br>- External status updates. |
+| Pain Points | - No structured way to collect new documents.<br/>- Applicant confused about urgency. |
+| Implication for Product | - Temporary steps.<br/>- External status updates. |
 
 ---
 
@@ -79,9 +79,9 @@ Structured descriptions of how users interact with the system.
 |:-------|:-----------|
 | Trigger | Applicant opens a step requiring document upload. |
 | Goal | Provide the correct document. |
-| Steps | 1. Applicant opens the step.<br>2. Reads instructions.<br>3. Uploads document.<br>4. Submits the step. |
+| Steps | 1. Applicant opens the step.<br/>2. Reads instructions.<br/>3. Uploads document.<br/>4. Submits the step. |
 | Success Outcome | Document submitted for coordinator review. |
-| Failure Outcome | - Missing file.<br>- Wrong file type.<br>- Poor quality image. |
+| Failure Outcome | - Missing file.<br/>- Wrong file type.<br/>- Poor quality image. |
 
 ---
 
@@ -91,7 +91,7 @@ Structured descriptions of how users interact with the system.
 |:-------|:-------------|
 | Trigger | Applicant submits a step. |
 | Goal | Approve or request corrections. |
-| Steps | 1. Coordinator opens submitted step.<br>2. Reviews answers and documents.<br>3. Adds notes if needed.<br>4. Approves or requests changes. |
+| Steps | 1. Coordinator opens submitted step.<br/>2. Reviews answers and documents.<br/>3. Adds notes if needed.<br/>4. Approves or requests changes. |
 | Success Outcome | Step approved. |
 | Failure Outcome | Applicant must correct and resubmit. |
 
@@ -103,7 +103,7 @@ Structured descriptions of how users interact with the system.
 |:-------|:-----------|
 | Trigger | Coordinator requests changes. |
 | Goal | Fix issues and resubmit. |
-| Steps | 1. Applicant reads coordinator notes.<br>2. Updates fields or re-uploads documents.<br>3. Resubmits. |
+| Steps | 1. Applicant reads coordinator notes.<br/>2. Updates fields or re-uploads documents.<br/>3. Resubmits. |
 | Success Outcome | Step moves back to coordinator. |
 | Failure Outcome | Applicant misunderstands instructions. |
 
@@ -115,7 +115,7 @@ Structured descriptions of how users interact with the system.
 |:-------|:-------------|
 | Trigger | Visa authority updates application status. |
 | Goal | Record and communicate status. |
-| Steps | 1. Coordinator receives update.<br>2. Logs status in system.<br>3. Applicant sees update. |
+| Steps | 1. Coordinator receives update.<br/>2. Logs status in system.<br/>3. Applicant sees update. |
 | Success Outcome | Applicant stays informed. |
 | Failure Outcome | Applicant remains anxious or uninformed. |
 
@@ -127,7 +127,7 @@ Structured descriptions of how users interact with the system.
 |:-------|:-----------|
 | Trigger | Applicant wants to know what’s left. |
 | Goal | Understand remaining steps. |
-| Steps | 1. Applicant opens progress view.<br>2. Sees completed, pending, and correction steps. |
+| Steps | 1. Applicant opens progress view.<br/>2. Sees completed, pending, and correction steps. |
 | Success Outcome | Applicant feels confident. |
 | Failure Outcome | Applicant remains confused. |
 
