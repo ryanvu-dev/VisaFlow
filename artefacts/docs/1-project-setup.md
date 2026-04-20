@@ -1,4 +1,4 @@
-| « Prev | [🏠︎](./README.md) | [Next](./2-devops-setup.md) » |
+| « Prev | 🏠︎ | [Next](./2-devops-setup.md) » |
 | --- | --- | --- |
 
 ---
@@ -24,72 +24,63 @@ This guide describes how to set up VisaFlow for **local development** on your ma
 
 ---
 
-## 2. Clone Repository
+## 2. Backend Setup (.NET 8)
 
 | Step | Action |
 |------|--------|
-| **2.1** | <details><summary><strong>Clone repo</strong></summary><br/><pre>git clone https://github.com/&lt;your-org&gt;/visaflow.git<br/>cd visaflow</pre></details> |
-| **2.2** | Ensure folder structure:<br/><pre>/backend<br/>/frontend<br/>/docs</pre> |
+| **2.1** | <details><summary><strong>Create backend .env</strong></summary><br/><pre>ASPNETCORE_ENVIRONMENT=Development<br/>CONNECTION_STRING=Host=localhost;Port=5432;Database=visaflow;Username=postgres;Password=postgres<br/>JWT_SECRET=local-dev-secret</pre></details> |
+| **2.2** | <details><summary><strong>Restore dependencies</strong></summary><br/><pre>cd backend<br/>dotnet restore</pre></details> |
+| **2.3** | <details><summary><strong>Apply migrations</strong></summary><br/><pre>dotnet ef database update</pre></details> |
+| **2.4** | <details><summary><strong>Run backend</strong></summary><br/><pre>dotnet watch run</pre></details> |
 
----
-
-## 3. Backend Setup (.NET 8)
-
-| Step | Action |
-|------|--------|
-| **3.1** | <details><summary><strong>Create backend .env</strong></summary><br/><pre>ASPNETCORE_ENVIRONMENT=Development<br/>DATABASE_URL=Host=localhost;Port=5432;Database=visaflow;Username=postgres;Password=postgres<br/>JWT_SECRET=local-dev-secret</pre></details> |
-| **3.2** | <details><summary><strong>Restore dependencies</strong></summary><br/><pre>cd backend<br/>dotnet restore</pre></details> |
-| **3.3** | <details><summary><strong>Apply migrations</strong></summary><br/><pre>dotnet ef database update</pre></details> |
-| **3.4** | <details><summary><strong>Run backend</strong></summary><br/><pre>dotnet watch run</pre></details> |
-
-By default, backend runs at:  
+Backend runs at:  
 **http://localhost:5000**
 
 ---
 
-## 4. Frontend Setup (Next.js)
+## 3. Frontend Setup (Next.js)
 
 | Step | Action |
 |------|--------|
-| **4.1** | <details><summary><strong>Create frontend .env.local</strong></summary><br/><pre>NEXT_PUBLIC_API_URL=http://localhost:5000<br/>NEXT_PUBLIC_ENV=development</pre></details> |
-| **4.2** | <details><summary><strong>Install dependencies</strong></summary><br/><pre>cd frontend<br/>npm install</pre></details> |
-| **4.3** | <details><summary><strong>Run frontend</strong></summary><br/><pre>npm run dev</pre></details> |
+| **3.1** | <details><summary><strong>Create frontend .env.local</strong></summary><br/><pre>NEXT_PUBLIC_API_URL=http://localhost:5000<br/>NEXT_PUBLIC_ENV=development</pre></details> |
+| **3.2** | <details><summary><strong>Install dependencies</strong></summary><br/><pre>cd frontend<br/>npm install</pre></details> |
+| **3.3** | <details><summary><strong>Run frontend</strong></summary><br/><pre>npm run dev</pre></details> |
 
-By default, frontend runs at:  
+Frontend runs at:  
 **http://localhost:3000**
 
 ---
 
-## 5. Database (Local Postgres)
+## 4. Database (Local Postgres)
 
 | Step | Action |
 |------|--------|
-| **5.1** | Create database:<br/><pre>createdb visaflow</pre> |
-| **5.2** | Ensure Postgres is running on port 5432. |
-| **5.3** | EF migrations will auto‑apply on backend startup. |
+| **4.1** | Create database:<br/><pre>createdb visaflow</pre> |
+| **4.2** | Ensure Postgres is running on port **5432** |
+| **4.3** | Migrations apply automatically on backend startup (if enabled) |
 
 ---
 
-## 6. Optional Tools
+## 5. Optional Tools
 
 | Tool | Purpose |
 |------|---------|
 | **pgAdmin / TablePlus** | GUI for Postgres |
 | **Thunder Client / Postman** | API testing |
-| **EF Core Power Tools** | Visualize DB schema |
+| **EF Core Power Tools** | Visualise DB schema |
 
 ---
 
-## 7. Troubleshooting
+## 6. Troubleshooting
 
 | Issue | Fix |
 |-------|-----|
-| Backend cannot connect to DB | Check `DATABASE_URL` |
+| Backend cannot connect to DB | Check `CONNECTION_STRING` |
 | Migrations fail | Ensure DB exists |
 | CORS errors | Update `ALLOWED_ORIGINS` in backend |
 | Frontend cannot reach backend | Check `NEXT_PUBLIC_API_URL` |
 
 ---
 
-| « Prev | [🏠︎](./README.md) | [Next](./2-devops-setup.md) » |
+| « Prev | 🏠︎ | [Next](./2-devops-setup.md) » |
 | --- | --- | --- |
