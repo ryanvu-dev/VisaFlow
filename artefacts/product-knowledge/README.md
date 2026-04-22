@@ -41,10 +41,14 @@
 
 ## 📦 | Project Assets
 
-![assets-banner](../banners/assets-banner.png)
+![project-assets-banner](../banners/project-assets-banner.png)
 
 <br/>
 
+| [View assets](https://visaflow-project.notion.site/Project-Assets-349d20ffd42880a285c8f61a6be037b5) ➡️ |
+| --- |
+
+<br/>
 
 ---
 
