@@ -1,4 +1,4 @@
-| « Prev | 🏠︎ | [Next](./2-devops-setup.md) » |
+| « Prev | [🏠︎](./README.md) | [Next](./2-devops-setup.md) » |
 | --- | --- | --- |
 
 ---
@@ -82,5 +82,5 @@ Frontend runs at:
 
 ---
 
-| « Prev | 🏠︎ | [Next](./2-devops-setup.md) » |
+| « Prev | [🏠︎](./README.md) | [Next](./2-devops-setup.md) » |
 | --- | --- | --- |
