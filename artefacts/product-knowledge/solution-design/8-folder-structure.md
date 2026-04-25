@@ -36,7 +36,7 @@ Shared assets (docs, diagrams, scripts) live at the root.
 visaflow/
 ├── backend/
 ├── frontend/
-├── docs/
+├── artefacts/
 ├── scripts/
 └── README.md
 ```
@@ -76,39 +76,51 @@ VisaFlow.Domain/
 ├── Entities/
 │   ├── User.cs
 │   ├── Workflow.cs
+│   ├── WorkflowStep.cs
 │   ├── Application.cs
+│   ├── ApplicationStep.cs
 │   ├── Document.cs
 │   ├── Comment.cs
 │   └── ExternalStatusUpdate.cs
 │
 ├── ValueObjects/
-│   ├── WorkflowStep.cs
-│   └── ApplicationStep.cs
+│   ├── EmailAddress.cs
+│   ├── FullName.cs
+│   └── DocumentMetadata.cs
 │
 ├── Enums/
 │   ├── UserRole.cs
 │   ├── ApplicationStatus.cs
+│   ├── StepStatus.cs
 │   └── DocumentUploadStatus.cs
 │
-└── Interfaces/
-├── IRepository.cs
-├── IWorkflowRepository.cs
-├── IApplicationRepository.cs
-└── IFileStorageService.cs
+├── Interfaces/
+│   ├── IRepository.cs
+│   ├── IWorkflowRepository.cs
+│   ├── IApplicationRepository.cs
+│   ├── ICommentRepository.cs
+│   ├── IExternalStatusRepository.cs
+│   └── IFileStorageService.cs
+│
+└── Exceptions/
+    ├── DomainException.cs
+    ├── InvalidStepTransitionException.cs
+    └── WorkflowNotFoundException.cs
 ```
 
 ### 2.2 Application Layer
 
 ```
 VisaFlow.Application/
-├── UseCases/
+├── Features/
 │   ├── Applications/
+│   │   ├── CreateApplication/ # UseCase, Validator, DTOs
+│   │   └── ...
+│   │
 │   ├── Workflows/
 │   ├── Documents/
 │   └── Comments/
 │
-├── DTOs/
-├── Validators/
 └── Common/
 ```
 
@@ -151,13 +163,11 @@ The frontend uses **Next.js 14 App Router**, **React Query**, and **client‑sid
 
 ```
 frontend/
-├── app/
-│   ├── layout.tsx
-│   ├── page.tsx
+├── pages/
+│   ├── _app.tsx
+│   ├── _document.tsx
 │   ├── applications/
-│   ├── workflows/
-│   ├── steps/
-│   └── status/
+│   └── workflows/
 │
 ├── components/
 │   ├── ui/
@@ -181,10 +191,10 @@ frontend/
 ```
 
 
-### 3.1 App Router Structure
+### 3.1 Pages Router Structure
 
 ```
-app/
+pages/
 ├── applications/
 │   ├── [id]/
 │   │   ├── page.tsx
@@ -197,7 +207,7 @@ app/
 │   ├── [id]/
 │   └── new/
 │
-└── page.tsx
+└── ...
 ```
 
 
@@ -216,19 +226,15 @@ components/
 ## 4. Shared Project Assets
 
 ```
-docs/
-├── 1-product-discovery.md
-├── 2-user-journey-map.md
-├── 3-problem-scenarios-use-cases.md
-├── 4-mvp-storyboard.md
-├── 5-implementation-plan.md
-├── 6-data-model.md
-├── 7-database-schema.md
-└── 8-folder-structure.md
+artefacts/
+├── banners/
+├── docs/
+├── product-knowledge/
+└── README.md
 
 scripts/
 ├── seed-data.sql
-└── local-dev.sh
+└── ...
 ```
 
 ---

@@ -58,7 +58,6 @@ Chosen for:
 - Excellent support for Onion Architecture  
 - Clean domain modelling  
 - Predictable performance  
-- Familiarity (InfoTrack stack)  
 - Great tooling (Rider / VS Code / Visual Studio)  
 
 ### Runtime
@@ -258,18 +257,72 @@ Render Postgres (Free Tier)
 
 ---
 
-## 10. Summary
+## 10. Logging Stack
 
-VisaFlow’s tech stack is designed to be:
+VisaFlow uses **Serilog** as the logging engine, always coded against Microsoft's `ILogger<T>` abstraction.
 
-- Strongly typed  
-- Cleanly architected  
-- Easy to deploy for free  
-- Familiar (React + .NET + SQL)  
-- Long‑term maintainable  
-- Aligned with enterprise patterns  
+### Logging Abstraction
 
-This stack gives you the best of both worlds:  
+- `ILogger<T>` — Microsoft's built-in interface, used everywhere in code
+- Never reference Serilog directly in Domain or Application layers
+
+### Serilog
+
+- Structured logging engine
+- Plugs in behind `ILogger<T>`
+- Configured once in `Program.cs`
+
+### Sinks
+
+| Sink | Environment | Purpose |
+|---|---|---|
+| Console | All | Terminal output |
+| Seq | Development | Local log UI at `http://localhost` |
+| Logtail (Better Stack) | Production | Cloud log storage and querying |
+
+### Installation
+
+```pwsh
+dotnet add package Serilog.AspNetCore
+dotnet add package Serilog.Sinks.Console
+dotnet add package Serilog.Sinks.Seq
+dotnet add package Serilog.Sinks.BetterStack
+```
+
+### Log Levels
+
+| Level | When |
+|---|---|
+| `Debug` | Detailed dev info |
+| `Information` | Normal operations, happy path |
+| `Warning` | Unexpected but recoverable |
+| `Error` | Something failed, needs attention |
+| `Critical` | App is broken |
+
+### Where Logging Lives
+
+| Layer | Logging |
+|---|---|
+| Domain | None — pure business logic |
+| Application | `ILogger<T>` injected into use cases |
+| Infrastructure | `ILogger<T>` for DB and storage operations |
+| API | Serilog pipeline, request logging middleware |
+
+---
+
+## 11. Summary
+
+VisaFlow's tech stack is designed to be:
+
+- Strongly typed
+- Cleanly architected
+- Easy to deploy for free
+- Familiar (React + .NET + SQL)
+- Long-term maintainable
+- Aligned with enterprise patterns
+- Observable via structured logging (Serilog + Seq + Logtail)
+
+This stack gives you the best of both worlds:
 **C# architecture quality + free, simple deployment.**
 
 ---

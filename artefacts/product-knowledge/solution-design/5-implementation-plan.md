@@ -88,6 +88,9 @@ Each use case orchestrates domain logic + interfaces:
 - `RequestCorrectionUseCase`
 - `UploadDocumentUseCase`
 - `AddExternalStatusUpdateUseCase`
+- Inject `ILogger<T>` into each use case
+- Log key operations (created, submitted, approved)
+- Log domain exceptions and state transitions
 
 ### 3.2 Use In‑Memory Repositories
 Before building real infrastructure:
@@ -149,13 +152,15 @@ Choose one:
 ## 5. Phase 4 — API Layer
 
 ### 5.1 Build Controllers
-Map HTTP routes to use cases:
-
-- `/applications`
-- `/applications/:id/steps/:stepId/submit`
-- `/documents`
-- `/comments`
-- `/external-status-updates`
+- Map HTTP routes to use cases:
+  - `/applications`
+  - `/applications/:id/steps/:stepId/submit`
+  - `/documents`
+  - `/comments`
+  - `/external-status-updates`
+- Add Serilog (Console + Seq sinks)
+- Configure log levels per environment
+- Add request logging middleware (Serilog has a built-in one)
 
 ### 5.2 Add Request Validation
 Use a lightweight schema validator.
@@ -227,7 +232,9 @@ flowchart LR
 ### 8.1 Backend
 - Deploy API to Render, Railway, or Supabase Functions  
 - Use environment variables  
-- Add migrations  
+- Add migrations
+- Replace Seq sink with Logtail (Better Stack) for production
+- Add Logtail source token to Render environment variables
 
 ### 8.2 Frontend
 - Deploy to Vercel  
@@ -250,7 +257,7 @@ VisaFlow MVP is complete when:
 - Comments can be exchanged  
 - External status updates can be added  
 - Workflow engine enforces state transitions  
-- Everything works end‑to‑end  
+- Everything works end‑to‑end
 
 ---
 
