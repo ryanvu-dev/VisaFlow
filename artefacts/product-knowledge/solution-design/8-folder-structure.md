@@ -81,7 +81,7 @@ VisaFlow.Domain/
 │   ├── ApplicationStep.cs
 │   ├── Document.cs
 │   ├── Comment.cs
-│   └── ExternalStatusUpdate.cs
+│   └── Event.cs
 │
 ├── ValueObjects/
 │   ├── EmailAddress.cs
@@ -91,20 +91,20 @@ VisaFlow.Domain/
 ├── Enums/
 │   ├── UserRole.cs
 │   ├── ApplicationStatus.cs
-│   ├── StepStatus.cs
-│   └── DocumentUploadStatus.cs
+│   ├── StepFlag.cs
+│   └── FinalOutcome.cs
 │
 ├── Interfaces/
 │   ├── IRepository.cs
 │   ├── IWorkflowRepository.cs
 │   ├── IApplicationRepository.cs
 │   ├── ICommentRepository.cs
-│   ├── IExternalStatusRepository.cs
+│   ├── IEventRepository.cs
 │   └── IFileStorageService.cs
 │
 └── Exceptions/
     ├── DomainException.cs
-    ├── InvalidStepTransitionException.cs
+    ├── InvalidApplicationTransitionException.cs
     └── WorkflowNotFoundException.cs
 ```
 
@@ -147,7 +147,7 @@ VisaFlow.Api/
 │   ├── ApplicationsController.cs
 │   ├── WorkflowsController.cs
 │   ├── DocumentsController.cs
-│   └── StatusUpdatesController.cs
+│   └── EventsController.cs
 │
 ├── Endpoints/ (if using Minimal APIs)
 ├── Filters/

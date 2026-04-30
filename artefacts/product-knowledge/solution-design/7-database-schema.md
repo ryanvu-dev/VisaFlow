@@ -34,17 +34,17 @@ The schema is intentionally **simple**, **normalised**, and **workflow‑driven*
 erDiagram
 
     User ||--o{ Application : "applicant_id"
-    User ||--o{ Document : "uploaded_by"
+    User ||--o{ Application : "coordinator_id"
+    User ||--o{ Document : "author_id"
     User ||--o{ Comment : "author"
-    User ||--o{ ExternalStatusUpdate : "coordinator"
+    User ||--o{ Event : "coordinator"
 
     Workflow ||--o{ Application : "instantiates"
 
     Application ||--o{ Document : "has"
     Application ||--o{ Comment : "has"
-    Application ||--o{ ExternalStatusUpdate : "has"
-
-    Document ||--o{ Comment : "comments on"
+    Application ||--o{ Event : "has"
+    Event ||--o{ Document : "event_id"
 ```
 
 </div>
@@ -78,8 +78,10 @@ Defines a reusable workflow template (e.g., “Universal Skeleton”, “Subclas
 | name          | text        | |
 | version       | text        | workflow version identifier |
 | coordinator_id | uuid (FK)  | references users(id) |
+| visa_type     | text        | e.g., "Visitor Visa" |
+| target_country | text       | e.g., "Australia" |
 | description   | text        | optional |
-| metadata      | jsonb       | optional (language, region, visa category) |
+| metadata      | jsonb       | optional (language, region, etc.) |
 | steps         | jsonb       | array of embedded `WorkflowStep` objects |
 | created_at    | timestamptz | |
 | updated_at    | timestamptz | |
@@ -93,56 +95,58 @@ Represents a single applicant’s visa application, instantiated from a workflow
 | id            | uuid (PK)   | |
 | workflow_id   | uuid (FK)   | references workflows(id) |
 | applicant_id  | uuid (FK)   | references users(id) |
-| visa_type     | text        | e.g., “Visitor Visa (600)” |
-| target_country | text       | e.g., “Australia” |
+| coordinator_id | uuid (FK)  | references users(id) |
 | title         | text        | user-friendly label |
-| status        | application_status | rich enum (see below) |
+| status        | application_status | `not_started`, `in_progress`, `submitted`, `under_review`, `needs_correction`, `finalised` |
+| final_outcome | final_outcome | nullable — `approved` or `rejected`; set when status is `finalised` |
 | steps         | jsonb       | array of embedded `ApplicationStep` objects |
 | created_at    | timestamptz | |
 | updated_at    | timestamptz | |
 
 ## 2.4 `documents`
 
-Metadata for uploaded files.
+Metadata for uploaded files. A document belongs to either a step field or an event attachment — not both.
 
 | Column            | Type        | Notes |
 |-------------------|-------------|-------|
 | id                | uuid (PK)   | |
 | application_id    | uuid (FK)   | references applications(id) |
-| step_instance_id  | text        | matches ApplicationStep.instance_id |
+| field_id          | text        | nullable — matches StepInputComponent.component_id |
+| event_id          | uuid (FK)   | nullable — references events(id) |
 | file_name         | text        | original filename |
 | storage_path      | text        | S3/local path |
 | mime_type         | text        | |
-| upload_status     | document_upload_status | `pending_review`, `approved`, `needs_correction` |
-| uploaded_by_id    | uuid (FK)   | references users(id) |
-| uploaded_at       | timestamptz | |
-| updated_at        | timestamptz | |
+| author_id         | uuid (FK)   | references users(id) |
+| created_at        | timestamptz | |
+| updated_at        | timestamptz | set on file replacement |
 
 ## 2.5 `comments`
 
-Comments left by coordinators or applicants on a step or document.
+Comments left by coordinators or applicants on a step or a specific input field within a step.
 
 | Column            | Type        | Notes |
 |-------------------|-------------|-------|
 | id                | uuid (PK)   | |
 | application_id    | uuid (FK)   | references applications(id) |
 | step_instance_id  | text        | matches ApplicationStep.instance_id |
-| document_id       | uuid (FK)   | nullable |
+| field_id          | text        | nullable — matches StepInputComponent.component_id; null means step-level comment |
 | author_id         | uuid (FK)   | references users(id) |
 | content           | text        | |
+| is_resolved       | boolean     | default false |
 | created_at        | timestamptz | |
 
-## 2.6 `external_status_updates`
+## 2.6 `events`
 
-Tracks manual updates from the coordinator regarding immigration progress.
+Coordinator-created timeline entries logged against an application.
 
 | Column            | Type        | Notes |
 |-------------------|-------------|-------|
 | id                | uuid (PK)   | |
 | application_id    | uuid (FK)   | references applications(id) |
 | coordinator_id    | uuid (FK)   | references users(id) |
-| status_text       | text        | e.g., “Submitted to immigration” |
-| update_date       | date        | |
+| name              | text        | title of the event |
+| date_time         | timestamptz | defaults to now() |
+| notes             | text        | optional |
 | created_at        | timestamptz | |
 
 ---
@@ -156,17 +160,18 @@ Tracks manual updates from the coordinator regarding immigration progress.
 ### `application_status`
 - `not_started`
 - `in_progress`
-- `submitted_to_coordinator`
-- `submitted_to_immigration`
+- `submitted`
+- `under_review`
 - `needs_correction`
+- `finalised`
+
+### `final_outcome`
 - `approved`
 - `rejected`
-- `granted`
 
-### `document_upload_status`
-- `pending_review`
-- `approved`
+### `step_flag`
 - `needs_correction`
+- `approved`
 
 ---
 
@@ -179,10 +184,11 @@ Recommended indexes:
 - `applications.applicant_id`
 - `applications.workflow_id`
 - `documents.application_id`
-- `documents.step_instance_id`
+- `documents.field_id`
+- `documents.event_id`
 - `comments.application_id`
 - `comments.step_instance_id`
-- `external_status_updates.application_id`
+- `events.application_id`
 
 These support the most common queries in the workflow engine.
 

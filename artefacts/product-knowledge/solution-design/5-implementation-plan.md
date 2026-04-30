@@ -52,11 +52,11 @@ Create pure domain models with no external dependencies:
 - `ApplicationStep`
 - `Document` (metadata only)
 - `Comment`
-- `ExternalStatus`
+- `Event`
 
 ### 2.2 Implement Domain Rules
-- Step state machine  
 - Application state machine  
+- Step flag logic (coordinator-set, cleared on resubmission)  
 - Validation rules  
 - Workflow structure rules  
 
@@ -68,7 +68,7 @@ Create abstractions for infrastructure:
 - `IStepRepository`
 - `IDocumentStorage`
 - `ICommentRepository`
-- `IExternalStatusRepository`
+- `IEventRepository`
 
 ### 2.4 Output of this phase
 - Pure domain logic  
@@ -83,11 +83,11 @@ Create abstractions for infrastructure:
 Each use case orchestrates domain logic + interfaces:
 
 - `CreateApplicationUseCase`
-- `SubmitStepUseCase`
-- `ApproveStepUseCase`
-- `RequestCorrectionUseCase`
+- `SubmitApplicationUseCase`
+- `FlagStepUseCase`
+- `FinaliseApplicationUseCase`
 - `UploadDocumentUseCase`
-- `AddExternalStatusUpdateUseCase`
+- `CreateEventUseCase`
 - Inject `ILogger<T>` into each use case
 - Log key operations (created, submitted, approved)
 - Log domain exceptions and state transitions
@@ -154,10 +154,12 @@ Choose one:
 ### 5.1 Build Controllers
 - Map HTTP routes to use cases:
   - `/applications`
-  - `/applications/:id/steps/:stepId/submit`
+  - `/applications/:id/status`
+  - `/applications/:id/steps/:stepId`
+  - `/applications/:id/steps/:stepId/flag`
   - `/documents`
   - `/comments`
-  - `/external-status-updates`
+  - `/applications/:id/events`
 - Add Serilog (Console + Seq sinks)
 - Configure log levels per environment
 - Add request logging middleware (Serilog has a built-in one)
@@ -181,18 +183,18 @@ Return consistent error shapes.
 - Step detail
 - Document upload
 - Correction flow
-- External status timeline
+- Event tracking timeline
 
 ### 6.2 Coordinator Screens
 - Dashboard
 - Application overview
 - Step review
-- External status updates
+- Event management
 
 ### 6.3 Integrate with API
 - Token handling
 - File uploads
-- Step submission
+- Application submission
 - Review actions
 
 ### 6.4 Output of this phase
@@ -213,7 +215,7 @@ flowchart LR
 
 ### 7.1 Unit Tests
 - Domain rules  
-- State machines  
+- Application state machine and step flag logic  
 - Use cases (with mocks)  
 
 ### 7.2 Integration Tests
@@ -255,7 +257,7 @@ VisaFlow MVP is complete when:
 - Coordinators can review and approve  
 - Documents can be uploaded  
 - Comments can be exchanged  
-- External status updates can be added  
+- Events can be created on the tracking timeline  
 - Workflow engine enforces state transitions  
 - Everything works end‑to‑end
 

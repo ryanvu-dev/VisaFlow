@@ -66,13 +66,14 @@ It contains **no external dependencies** and represents the pure business logic.
 - `ApplicationStep`  
 - `Document` (metadata only)  
 - `Comment`  
-- `ExternalStatus`  
+- `Event`  
 
 ### 3.2 Domain Rules
 
 - Workflow structure  
 - Step validation  
-- State machine transitions  
+- Application state machine transitions  
+- Step flag logic (coordinator-set, cleared on resubmission)  
 - Coordinator–applicant interaction loop  
 
 ### 3.3 Domain Interfaces (Ports)
@@ -89,24 +90,24 @@ flowchart LR
         IStepRepo[IStepRepository]
         IStorage[IDocumentStorage]
         ICommentRepo[ICommentRepository]
-        IExternalStatusRepo[IExternalStatusRepository]
+        IEventRepo[IEventRepository]
     end
 
     subgraph InfraLayer[Infrastructure Adapters]
         PostgresAppRepo[PostgresApplicationRepository]
         PostgresWorkflowRepo[PostgresWorkflowRepository]
         PostgresCommentRepo[PostgresCommentRepository]
+        PostgresEventRepo[PostgresEventRepository]
         LocalStorage[LocalFileStorage]
         S3Storage[S3DocumentStorage]
-        JwtAuth[JwtAuthProvider]
     end
 
     PostgresAppRepo --> IApplicationRepo
     PostgresWorkflowRepo --> IWorkflowRepo
     PostgresCommentRepo --> ICommentRepo
+    PostgresEventRepo --> IEventRepo
     LocalStorage --> IStorage
     S3Storage --> IStorage
-    JwtAuth --> IExternalStatusRepo
 ```
 
 </div>
@@ -120,11 +121,11 @@ This layer orchestrates domain logic and coordinates interactions between domain
 ### 4.1 Use Case Examples
 
 - `CreateApplicationUseCase`  
-- `SubmitStepUseCase`  
-- `ApproveStepUseCase`  
-- `RequestCorrectionUseCase`  
+- `SubmitApplicationUseCase`  
+- `FlagStepUseCase`  
+- `FinaliseApplicationUseCase`  
 - `UploadDocumentUseCase`  
-- `AddExternalStatusUpdateUseCase`  
+- `CreateEventUseCase`  
 
 ### 4.2 Responsibilities
 
@@ -161,6 +162,7 @@ This is the outermost layer — everything here is replaceable.
 - `PostgresApplicationRepository`  
 - `PostgresWorkflowRepository`  
 - `PostgresCommentRepository`  
+- `PostgresEventRepository`  
 
 ### 5.2 File Storage Adapters
 
@@ -197,7 +199,7 @@ The frontend interacts with the API layer.
 - Render workflow steps  
 - Handle applicant submissions  
 - Handle coordinator reviews  
-- Display progress and external status timeline  
+- Display progress and event tracking timeline  
 - Upload documents via API  
 
 ---

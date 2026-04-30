@@ -19,7 +19,7 @@ The goals of this architecture are:
 * Give coordinators a structured review and tracking system
 * Support universal workflows with visa-specific variations
 * Maintain simplicity, predictability, and low cognitive load
-* Ensure every step has a clear state, requirements, and outcomes
+* Ensure every step has clear requirements and outcomes
 
 ---
 
@@ -33,12 +33,12 @@ In this system, attributes represent the data or state an entity holds, while be
 
 A person who interacts with the system, either as an applicant or coordinator.
 
-| Attribute | Description | 
-| --- | --- | 
-| user_id | Unique identifier for the user | 
-| name | Full name of the user | 
-| contact | Email or phone contact information | 
-| role | User role (applicant or coordinator) | 
+| Attribute | Description |
+| --- | --- |
+| user_id | Unique identifier for the user |
+| name | Full name of the user |
+| email | Email address for authentication and communication |
+| role | User role (applicant or coordinator) |
 
 #### Behaviours
 
@@ -50,13 +50,15 @@ A person who interacts with the system, either as an applicant or coordinator.
 
 A form or definition of the sequence and structure of steps for visa application processing.
 
-| Attribute | Description | 
-| --- | --- | 
-| workflow_id | Unique identifier for the workflow | 
-| name | Name of the workflow (e.g., "Universal Skeleton", "Subclass 600") | 
-| version | Version number of the workflow | 
-| steps | Ordered list of embedded WorkflowStep definitions | 
-| metadata | Metadata such as language and region | 
+| Attribute | Description |
+| --- | --- |
+| workflow_id | Unique identifier for the workflow |
+| name | Name of the workflow (e.g., "Australian Visitor Visa Subclass 600") |
+| version | Version number of the workflow |
+| visa_type | The visa type this workflow applies to |
+| target_country | The country this workflow targets |
+| steps | Ordered list of embedded WorkflowStep definitions |
+| metadata | Additional metadata such as language and region |
 
 #### Behaviours
 
@@ -68,75 +70,73 @@ A form or definition of the sequence and structure of steps for visa application
 
 A real application created from a Workflow. This is what the applicant fills and the coordinator reviews.
 
-| Attribute | Description | 
-| --- | --- | 
-| application_id | Unique identifier for the application instance | 
-| workflow_id | Reference to the workflow | 
-| applicant_id | Reference to the applicant user | 
-| coordinator_id | Reference to the coordinator user | 
-| steps | Ordered list of embedded StepInstance objects within this application | 
-| external_statuses | List of ExternalStatus entities tracking progress with authorities | 
-| overall_status | Current overall status (e.g., in progress, submitted, completed) | 
+| Attribute | Description |
+| --- | --- |
+| application_id | Unique identifier for the application instance |
+| workflow_id | Reference to the workflow |
+| applicant_id | Reference to the applicant user |
+| coordinator_id | Reference to the coordinator user |
+| title | User-friendly label for the application |
+| steps | Ordered list of embedded ApplicationStep objects within this application |
+| status | Current overall application status (see Application State Machine) |
+| final_outcome | The outcome once finalised — `Approved` or `Rejected`. Null until status is `Finalised` |
 
 #### Behaviours
 
 * track progress
 * store applicant data
 * store documents
-* store coordinator notes
-* update external authority progress
+* create timeline events
+* finalise with outcome
 
 ### 2.4 WorkflowStep
 
-Defines the structure of a step inside a Workflow. Steps are embedded within the Workflow entity and do not have a separate step_id attribute.
+Defines the structure of a step inside a Workflow. Steps are embedded within the Workflow entity.
 
-| Attribute | Description | 
-| --- | --- | 
-| title | Title of the step | 
-| description | Description of the step | 
-| order_index | Position of the step in the workflow sequence | 
-| step_input_components | Collection of input components including fields/questions, required documents, and validation rules | 
+| Attribute | Description |
+| --- | --- |
+| title | Title of the step |
+| description | Description of the step |
+| order_index | Position of the step in the workflow sequence |
+| step_input_components | Collection of StepInputComponent definitions including fields, required documents, and validation rules |
 
 #### Behaviours
 
 * define title, description, requirements
 * define validation logic
 
-This entity represents the step input components such as fields/questions, required documents, and validation rules.
-
 ### 2.5 ApplicationStep
 
-A runtime occurrence of a Step within an Application. ApplicationStep is embedded within the Application entity and uniquely identified by its position in the application's steps list and its reference to the Workflow step definition. It stores user responses and references to separate document/comment entities.
+A runtime occurrence of a WorkflowStep within an Application. ApplicationStep is embedded within the Application entity and stores user responses and coordinator flags.
 
-| Attribute | Description | 
-| --- | --- | 
-| step_answers | List of answers provided for this step instance | 
-| document_ids | List of document IDs associated with this step instance | 
-| comment_ids | List of comment IDs associated with this step instance | 
-| status | Current status (Not started → Approved) | 
-| coordinator_notes | Notes from the coordinator | 
+| Attribute | Description |
+| --- | --- |
+| workflow_step_id | Reference to the WorkflowStep definition |
+| step_answers | List of answers provided for this step instance |
+| flag | Coordinator-set flag — null until marked (see Step Flags) |
 
 #### Behaviours
 
-* submit
-* request_correction
-* approve
-* resubmit
+* **flag as needs correction:** Coordinator marks the step as requiring changes
+* **flag as approved:** Coordinator marks the step as accepted
+* **clear needs correction flag:** `NEEDS_CORRECTION` flag is cleared when the applicant resubmits — `APPROVED` flags are preserved
 
 ### 2.6 Step Input Component
 
 Defines the input elements that structure data collection within a WorkflowStep. This entity details the types of inputs, validation rules, and metadata necessary for user interaction.
 
-| Attribute | Description | 
-| --- | --- | 
-| component_id | Unique identifier for the input component | 
-| type | Type of input (e.g., text, dropdown, file upload, date) | 
-| label | Display label for the input | 
-| required | Boolean indicating if input is mandatory | 
-| validation_rules | Rules to validate input (e.g., regex, range) | 
-| conditional_logic | Logic to show/hide input based on other inputs | 
-| help_text | Additional guidance for the user | 
-| order_index | Position of the input within the step | 
+The `component_id` serves as the `field_id` reference used by both `Comment` and `Document` entities to target a specific input field.
+
+| Attribute | Description |
+| --- | --- |
+| component_id | Unique identifier for the input component — referenced as `field_id` in comments and documents |
+| type | Type of input (e.g., text, dropdown, file upload, date) |
+| label | Display label for the input |
+| required | Boolean indicating if input is mandatory |
+| validation_rules | Rules to validate input (e.g., regex, range) |
+| conditional_logic | Logic to show/hide input based on other inputs |
+| help_text | Additional guidance for the user |
+| order_index | Position of the input within the step |
 
 #### Behaviours
 
@@ -147,35 +147,67 @@ Defines the input elements that structure data collection within a WorkflowStep.
 
 ### 2.7 Document
 
-A document uploaded by a user as part of an Application. Documents are linked to the Application and associated StepInstance contextually.
+A file uploaded either to a specific input field within an application step, or attached to a timeline event.
 
-| Attribute | Description | 
-| --- | --- | 
-| document_id | Unique identifier for the document | 
-| application_id | Reference to the owning application | 
-| uploaded_by | User ID of the uploader | 
-| file_metadata | Metadata about the file (name, type, size) | 
-| timestamp | Upload timestamp | 
-| status | Current status (submitted, needs correction, approved) | 
+| Attribute | Description |
+| --- | --- |
+| document_id | Unique identifier for the document |
+| application_id | Reference to the owning application |
+| field_id | Input field this document belongs to — null if attached to an event |
+| event_id | Event this document is attached to — null if uploaded to a step field |
+| file_name | Original file name |
+| storage_path | Path or URL to the stored file |
+| mime_type | File MIME type (e.g., `image/jpeg`, `application/pdf`) |
+| author_id | Reference to the user who uploaded the file |
+| created_at | Timestamp of upload |
+| updated_at | Timestamp of last replacement |
 
 #### Behaviours
 
 * upload
 * replace
-* mark as approved / needs correction
 
-### 2.8 Catalogue
+### 2.8 Comment
+
+A comment left by a coordinator or applicant on a step or a specific input field within a step.
+
+| Attribute | Description |
+| --- | --- |
+| comment_id | Unique identifier for the comment |
+| application_id | Reference to the owning application |
+| step_instance_id | Reference to the ApplicationStep this comment belongs to |
+| author_id | Reference to the user who wrote the comment |
+| field_id | Optional reference to a StepInputComponent — null means step-level comment |
+| content | The comment text |
+| is_resolved | Whether the comment has been resolved — false by default |
+| created_at | Timestamp of the comment |
+
+#### Comment scope
+
+| field_id | Displayed |
+| --- | --- |
+| null | In the Coordinator comments block at the bottom of the step |
+| set | Inline under the specific input field it references |
+
+#### Behaviours
+
+* add comment at step level
+* add comment at field level
+* display inline per field when field_id is set
+* resolve comment
+
+### 2.9 Catalogue
 
 A reusable collection or library of standardised items such as document types, visa subclasses, or input component templates that can be referenced across workflows or steps.
 
-| Attribute | Description | 
-| --- | --- | 
-| catalogue_id | Unique identifier for the catalogue | 
-| name | Name of the catalogue | 
-| description | Description of the catalogue's purpose | 
-| item_type | Type of items contained (e.g., document types, visa subclasses) | 
-| items | List of catalogue items or references | 
-| version | Version number for managing updates | 
+| Attribute | Description |
+| --- | --- |
+| catalogue_id | Unique identifier for the catalogue |
+| name | Name of the catalogue |
+| description | Description of the catalogue's purpose |
+| item_type | Type of items contained (e.g., document types, visa subclasses) |
+| items | List of catalogue items or references |
+| version | Version number for managing updates |
 
 #### Behaviours
 
@@ -185,61 +217,63 @@ A reusable collection or library of standardised items such as document types, v
 * version_control
 * provide_items_for_reference
 
-### 2.9 ExternalStatus
+### 2.10 Event
 
-Represents progress with the real visa authority.
+A coordinator-created timeline entry logged against an application. Events appear chronologically on the applicant's tracking timeline.
 
-| Attribute | Description | 
-| --- | --- | 
-| external_status_id | Unique identifier for the external status record | 
-| application_id | Reference to the related application | 
-| status_type | Type of status (submitted, biometrics requested, decision made) | 
-| timestamp | Timestamp of the status update | 
-| notes | Additional notes or comments | 
+| Attribute | Description |
+| --- | --- |
+| event_id | Unique identifier for the event |
+| application_id | Reference to the related application |
+| coordinator_id | Reference to the coordinator who created the event |
+| name | Title of the event (e.g., "Application lodged", "Biometrics appointment") |
+| date_time | Date and time of the event — defaults to now |
+| notes | Optional additional detail |
 
 #### Behaviours
 
-* update by coordinator
-* notify applicant
+* create event
+* attach files
+* display on tracking timeline
 
 ---
 
 ## 3. Workflow Model
 
-The Workflow Model defines the conceptual and structural framework that governs how workflows are created, managed, and executed within the visa-preparation system. It builds upon the Core Entities by specifying the relationships, rules, and constraints that ensure workflows are consistent, adaptable, and scalable.
+The Workflow Model defines the conceptual and structural framework that governs how workflows are created, managed, and executed within the visa-preparation system.
 
 ### 3.1 Purpose
 
 * Establish a clear schema for workflow templates and instances
 * Define how steps are sequenced and interrelated
-* Support variations and conditional paths within workflows
-* Enable versioning and lifecycle management of workflows
-* Facilitate integration with external systems and authorities
+* Ensure consistency, adaptability, and scalability
 
-### 3.2 Key Concepts
+### 3.2 Key Terms
 
-| Concept | Description | 
-| --- | --- | 
-| Workflow | A form defining the ordered steps and rules for a visa application process |
-| Application | A live instance of a workflow filled with applicant responses |
-| Step | A discrete unit of work or data collection within a workflow | 
-| StepInstance | A runtime occurrence of a Step within an Application | 
-| Transition | The movement or progression from one Step to another based on conditions | 
-| Condition | Logical expressions that determine workflow branching or step activation | 
+| Term | Description |
+| --- | --- |
+| Workflow | A reusable template defining the structure and sequence of steps |
+| WorkflowStep | A step definition embedded within a Workflow |
+| StepInputComponent | An input field definition within a WorkflowStep |
+| Application | A runtime instance of a Workflow created for a specific applicant |
+| ApplicationStep | A runtime occurrence of a WorkflowStep within an Application |
+| Transition | The movement from one state to another based on an event |
+| Condition | Logical expressions that determine workflow branching or step activation |
 
 ### 3.3 Structure
 
 The Workflow Model is composed of interconnected components:
 
-* **Workflow:** Defines the ordered sequence of Steps, including metadata and versioning.
-* **Steps:** Each Step contains input components and validation rules.
-* **Transitions:** Define how and when the workflow moves from one Step to the next.
-* **Conditions:** Control branching logic and dynamic workflow paths.
-* **Applications:** Instances of a Workflow with runtime data and statuses.
+* **Workflow:** Defines the ordered sequence of WorkflowSteps, including metadata and versioning
+* **WorkflowSteps:** Each step contains StepInputComponents and validation rules
+* **StepInputComponents:** Define the fields, documents, and validation for each step
+* **Transitions:** Define how and when the workflow moves from one step to the next
+* **Conditions:** Control branching logic and dynamic workflow paths
+* **Applications:** Instances of a Workflow with runtime data and statuses
 
 ### 3.4 Versioning and Lifecycle
 
-Workflows support versioning to allow updates and improvements without disrupting active applications. Each version maintains backward compatibility and clear migration paths.
+Workflows support versioning to allow updates and improvements without disrupting active applications. Each version maintains backward compatibility and clear migration paths. Existing applications always continue using the workflow version they were created from.
 
 ### 3.5 Integration Points
 
@@ -249,44 +283,44 @@ The Workflow Model includes hooks for integration with external authorities, doc
 
 ## 4. Step Anatomy
 
-The Step Anatomy section details the internal structure and components of a Step within a Workflow. It breaks down the elements that define a Step's purpose, inputs, validations, and interactions.
+The Step Anatomy section details the internal structure and components of a WorkflowStep.
 
 ### 4.1 Purpose
 
-* Define the detailed structure of a Step
+* Define the detailed structure of a step
 * Specify input components and their configurations
-* Establish validation and conditional logic within the Step
+* Establish validation and conditional logic within the step
 * Support user interaction and data collection
 
 ### 4.2 Components
 
-| Component | Description | 
-| --- | --- | 
-| Title | The display title of the Step | 
-| Description | A detailed explanation or instructions for the Step | 
-| Input Components | Fields, questions, or document requirements that collect data | 
-| Validation Rules | Rules that enforce data integrity and completeness | 
-| Conditional Logic | Logic to show or hide inputs based on user responses | 
-| Help Text | Additional guidance to assist the user | 
+| Component | Description |
+| --- | --- |
+| Title | The display title of the step |
+| Description | A detailed explanation or instructions for the step |
+| Input Components | Fields, questions, or document requirements that collect data |
+| Validation Rules | Rules that enforce data integrity and completeness |
+| Conditional Logic | Logic to show or hide inputs based on user responses |
+| Help Text | Additional guidance to assist the user |
 
 ### 4.3 Input Components
 
-Input Components are the building blocks of a Step, defining the data to be collected. They include various types such as text fields, dropdowns, date pickers, file uploads, and more.
+StepInputComponents are the building blocks of a step, defining the data to be collected. They include various types such as text fields, dropdowns, date pickers, file uploads, and more.
 
-| Attribute | Description | 
-| --- | --- | 
-| component_id | Unique identifier for the input component | 
-| type | Type of input (e.g., text, dropdown, file upload) | 
-| label | Display label for the input | 
-| required | Boolean indicating if the input is mandatory | 
-| validation_rules | Rules to validate the input (e.g., regex, range) | 
-| conditional_logic | Logic to show or hide the input based on other inputs | 
-| help_text | Additional guidance for the user | 
-| order_index | Position of the input within the Step | 
+| Attribute | Description |
+| --- | --- |
+| component_id | Unique identifier — referenced as `FieldId` in comments |
+| type | Type of input (e.g., text, dropdown, file upload) |
+| label | Display label for the input |
+| required | Boolean indicating if the input is mandatory |
+| validation_rules | Rules to validate the input (e.g., regex, range) |
+| conditional_logic | Logic to show or hide the input based on other inputs |
+| help_text | Additional guidance for the user |
+| order_index | Position of the input within the step |
 
 ### 4.4 Validation and Conditional Logic
 
-Validation rules ensure data correctness and completeness, while conditional logic dynamically adjusts the Step based on user inputs.
+Validation rules ensure data correctness and completeness, while conditional logic dynamically adjusts the step based on user inputs.
 
 ### 4.5 Behaviours
 
@@ -297,52 +331,117 @@ Validation rules ensure data correctness and completeness, while conditional log
 
 ---
 
-## 5. State Machine
+## 5. State Machines
 
-The State Machine section defines the mechanism by which the workflow and application states transition based on events, conditions, and user actions. It ensures that the workflow progresses logically and consistently through its lifecycle.
+VisaFlow uses a single application-level state machine. Steps do not have their own state machine — they have a coordinator-set flag instead.
 
-### 5.1 Purpose
+### 5.1 Step Flags
 
-* Define the states an application or step can be in
-* Specify valid transitions between states
-* Enforce rules and conditions for state changes
-* Support rollback, correction, and approval processes
+Steps do not progress through states. Instead, each step has an optional flag set by the coordinator during review.
 
-### 5.2 Key Concepts
+| Flag | Description |
+| --- | --- |
+| — | No flag — step has not yet been reviewed |
+| Needs Correction | Coordinator has requested changes to this step |
+| Approved | Coordinator has accepted this step |
 
-| Concept | Description | 
-| --- | --- | 
-| State | A distinct status representing the current condition of an application or step | 
-| Transition | A permitted change from one state to another triggered by an event or condition | 
-| Event | An action or occurrence that triggers a state transition | 
-| Condition | Logical criteria that must be met for a transition to occur | 
+Flags are:
 
-### 5.3 States
+* Set by the coordinator during review
+* Visible to the applicant only when set
+* Inputs are read-only when flagged Approved
+* `NEEDS_CORRECTION` flag is cleared when the applicant resubmits — `APPROVED` flags are preserved
 
-The State Machine defines a set of states for both the overall application and individual steps. Common states include:
+```mermaid
+stateDiagram-v2
+    [*] --> Unflagged
+    Unflagged --> NeedsCorrection : Coordinator flags needs correction
+    Unflagged --> Approved : Coordinator flags approved
+    NeedsCorrection --> Unflagged : Applicant resubmits application
 
-* Not Started
-* In Progress
-* Submitted
-* Under Review
-* Approved
-* Rejected
-* Needs Correction
+    NeedsCorrection : Needs Correction
+```
 
-### 5.4 Transitions
+### 5.2 Application State Machine
 
-Transitions define how and when the system moves from one state to another. Examples include:
+Controls the lifecycle of the overall Application.
 
-* Submit: Not Started → Submitted
-* Approve: Under Review → Approved
-* Request Correction: Under Review → Needs Correction
-* Resubmit: Needs Correction → Submitted
+#### States
 
-### 5.5 Rules and Conditions
+| State | Description |
+| --- | --- |
+| Not Started | Application has not been opened by the applicant |
+| In Progress | Applicant is actively filling the application |
+| Submitted | Applicant has submitted the whole application for review |
+| Under Review | Coordinator is actively reviewing the application |
+| Needs Correction | Coordinator has returned the application with any step flag set to "Needs Correction" |
+| Finalised | Coordinator has made a final decision |
 
-Transitions are governed by rules and conditions to ensure valid state changes. For example, a step cannot be approved unless all required inputs and documents are complete and valid.
+#### Final Outcome
 
-### 5.6 Behaviours
+When an application is `Finalised`, a separate `final_outcome` field records the result:
+
+| Outcome | Description |
+| --- | --- |
+| Approved | Application accepted internally, proceeds to external tracking |
+| Rejected | Application rejected, no further action |
+
+#### Transitions
+
+| From | To | Trigger | Actor |
+| --- | --- | --- | --- |
+| Not Started | In Progress | Successful authentication | Applicant |
+| In Progress | Submitted | Applicant submits the whole application | Applicant |
+| Submitted | Under Review | Coordinator clicks Start Review | Coordinator |
+| Under Review | Needs Correction | Coordinator submits review with steps flagged Needs Correction | Coordinator |
+| Under Review | Finalised | Coordinator finalises with all steps flagged Approved | Coordinator |
+| Needs Correction | Submitted | Applicant resubmits the application | Applicant |
+
+#### Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> NotStarted
+
+    NotStarted --> InProgress : Applicant authenticates\n[if Not Started]
+    InProgress --> Submitted : Applicant submits application
+    Submitted --> UnderReview : Coordinator clicks Start Review<br/>[if Submitted]
+    UnderReview --> NeedsCorrection : Coordinator submits review with corrections
+    UnderReview --> Finalised : Coordinator finalises<br/>(all steps flagged Approved)
+    NeedsCorrection --> Submitted : Applicant resubmits
+
+    Finalised --> [*]
+
+    NotStarted : Not Started
+    InProgress : In Progress
+    UnderReview : Under Review
+    NeedsCorrection : Needs Correction
+
+    state Finalised {
+        [*] --> Approved
+        [*] --> Rejected
+    }
+```
+
+### 5.3 Status-Guarded Transitions
+
+Key transitions are guarded by the current application status to prevent re-triggering on repeat access.
+
+| Trigger | Guard | Transition |
+| --- | --- | --- |
+| Applicant authenticates | status == Not Started | Not Started → In Progress |
+| Coordinator clicks Start Review | status == Submitted | Submitted → Under Review |
+
+If the guard condition is false, no transition fires. This also drives the coordinator's button label — `Start Review` when status is `Submitted`, `Resume Review` when already `Under Review`.
+
+### 5.4 Rules and Conditions
+
+* An application cannot be submitted unless all required step inputs and documents are complete
+* An application cannot be Finalised unless all steps are flagged Approved
+* Once Finalised, no further state changes are permitted
+* `NEEDS_CORRECTION` step flags are cleared when the applicant resubmits — `APPROVED` flags are preserved
+
+### 5.5 Behaviours
 
 * Enforce state transition rules
 * Trigger notifications on state changes
@@ -353,40 +452,49 @@ Transitions are governed by rules and conditions to ensure valid state changes. 
 
 ## 6. Coordinator–Applicant Interaction Loop
 
-The system is built around a predictable, structured loop between applicants and coordinators. Each step in the workflow follows this interaction pattern.
+The system is built around a predictable, structured loop between applicants and coordinators at the application level.
 
-### 6.1 Applicant Action Cycle
+### 6.1 Applicant Submission Cycle
 
-1. Applicant opens a step.
-2. Applicant fills required fields.
-3. Applicant uploads required documents.
-4. Applicant submits the step for review.
-
-Once submitted, the step becomes **locked** for the applicant until the coordinator responds.
+1. Applicant authenticates → application transitions to In Progress (if Not Started)
+2. Applicant navigates through steps using Continue
+3. Applicant reviews all steps at the review page
+4. Applicant submits the whole application → status becomes Submitted
 
 ### 6.2 Coordinator Review Cycle
 
-1. Coordinator reviews submitted data and documents.
-2. Coordinator chooses one of:
-   * **Approve** the step
-   * **Request changes** with notes
-3. If changes are requested, the step returns to the applicant with clear instructions.
+1. Coordinator clicks Start Review → application transitions to Under Review (if Submitted)
+2. Coordinator reviews each step, setting flags per step:
+   * **Approved** — step is accepted
+   * **Needs Correction** — step requires changes, with inline comments per field
+3. Coordinator submits review:
+   * Any steps flagged Needs Correction → application becomes Needs Correction
+   * All steps flagged Approved → coordinator can Finalise the application
 
 ### 6.3 Correction Cycle
 
-1. Applicant reviews coordinator notes.
-2. Applicant updates fields or re‑uploads documents.
-3. Applicant resubmits the step.
+1. Applicant sees step flags and inline comments per field
+2. Applicant updates flagged steps
+3. Applicant resubmits the whole application → status returns to Submitted, `NEEDS_CORRECTION` flags are cleared, `APPROVED` flags are preserved
 
-This loop continues until the step is approved.
+This loop continues until all steps are flagged Approved.
 
-### 6.4 Application Completion Cycle
+### 6.4 Application Finalisation Cycle
 
-Once all steps are approved:
+Once all steps are Approved:
 
-* Coordinator submits the real visa application to the authority.
-* ExternalStatus updates begin.
-* Applicant can track progress asynchronously.
+1. Coordinator reviews the full application
+2. Coordinator **Finalises** the application with an outcome — `Approved` or `Rejected`
+3. If Approved — Event tracking begins and the applicant can track migration progress via the timeline
+4. If Rejected — application enters a terminal state, remains viewable by the applicant
+
+### 6.5 External Tracking Cycle
+
+After finalisation with an Approved outcome:
+
+1. Coordinator creates Events via the calendar as the application moves through the migration process
+2. Events appear on the applicant's tracking timeline in chronological order
+3. Each event has a name, date/time, optional notes, and optional attachments
 
 ---
 
@@ -396,41 +504,43 @@ The system must gracefully handle irregular or unexpected situations.
 
 ### 7.1 Missing or Incorrect Documents
 
-* Applicant uploads wrong file → coordinator marks as "needs correction".
-* Applicant forgets a file → step cannot be submitted.
-* Coordinator can optionally upload a document on behalf of the applicant.
+* Applicant uploads wrong file → coordinator marks step as Needs Correction
+* Applicant forgets a file → application cannot be submitted until the required document is uploaded
+* Coordinator can optionally upload a document on behalf of the applicant
 
 ### 7.2 Step Skipping or Conditional Steps
 
 Some steps may be optional or conditional.
 
-* Workflow defines conditions (e.g., "Only required if applicant has previous travel").
-* Conditional steps appear or disappear dynamically.
+* Workflow defines conditions (e.g., "Only required if applicant has previous travel")
+* Conditional steps appear or disappear dynamically based on applicant responses
 
 ### 7.3 Workflow Versioning
 
 If a workflow is updated:
 
-* Existing applications continue using their original version.
-* New applications use the new version.
+* Existing applications continue using their original version
+* New applications use the new version
+* No migration of in-progress applications between versions
 
 ### 7.4 External Authority Delays or Changes
 
-* Coordinator can update ExternalStatus at any time.
-* Applicant sees a timeline of updates.
-* If authority requests additional documents, a new temporary step can be injected.
+* Coordinator can create new Events at any time
+* Applicant sees a chronological timeline of updates
+* If authority requests additional documents, a new temporary step can be injected
 
 ### 7.5 Applicant or Coordinator Reassignment
 
-* Coordinator may change mid‑process.
-* Applicant may need help from another family member.
-* Reassignment updates the application metadata but preserves history.
+* Coordinator may change mid-process
+* Applicant may need help from another family member
+* Reassignment updates the application metadata but preserves history
 
 ### 7.6 Application Withdrawal or Cancellation
 
-* Applicant may withdraw before submission.
-* Coordinator may cancel due to ineligibility.
-* Application enters a terminal state but remains viewable.
+* Applicant may withdraw before submission
+* Coordinator may cancel due to ineligibility
+* Application enters a terminal `Withdrawn` or `Cancelled` state — distinct from `Finalised`
+* Withdrawn/cancelled applications remain viewable but cannot be reactivated
 
 ---
 

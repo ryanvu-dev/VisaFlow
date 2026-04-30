@@ -21,7 +21,7 @@ The API is intentionally simple, predictable, and aligned with the linear workfl
 * Keep the API lightweight and easy to iterate for a personal project  
 * Support embedded step data while preserving separate document/comment references  
 * Allow coordinators and applicants to operate through distinct but related endpoints  
-* Enable future integration with external authority updates and notifications  
+* Enable coordinator event creation and applicant tracking timeline  
 * Enforce workflow state transitions and coordinator–applicant interaction loops  
 
 ---
@@ -33,7 +33,7 @@ The API is intentionally simple, predictable, and aligned with the linear workfl
 * `Application`  
 * `Document`  
 * `Comment`  
-* `ExternalStatusUpdate`  
+* `Event`  
 
 These map directly to the data model and workflow architecture.
 
@@ -92,7 +92,7 @@ Below is the unified endpoint set combining your version and the expanded versio
 * Update application-level fields such as `title`, `status`, or step answers.
 
 `PATCH /applications/:application_id/status`  
-* Change overall application state (e.g., `IN_PROGRESS → SUBMITTED_TO_COORDINATOR`).
+* Change overall application state (e.g., `IN_PROGRESS → SUBMITTED`).
 
 ### 4.3 Steps (Application Steps)
 
@@ -104,20 +104,17 @@ These endpoints support the applicant–coordinator interaction loop.
 `GET /applications/:application_id/steps/:step_id`  
 * Fetch a single step instance.
 
-`POST /applications/:application_id/steps/:step_id/submit`  
-* Applicant submits a step.
+`PUT /applications/:application_id/steps/:step_id`  
+* Save applicant answers for a step (autosave or on Continue).
 
-`POST /applications/:application_id/steps/:step_id/request-correction`  
-* Coordinator requests changes.
-
-`POST /applications/:application_id/steps/:step_id/approve`  
-* Coordinator approves the step.
+`PATCH /applications/:application_id/steps/:step_id/flag`  
+* Coordinator sets or clears the flag on a step (`NEEDS_CORRECTION` or `APPROVED`). Cleared automatically on application resubmission.
 
 ### 4.4 Documents
 
 `POST /applications/:application_id/documents`  
 * Upload a document.  
-* Body includes `step_instance_id` + file.
+* Body includes `field_id` (nullable — step upload) or `event_id` (nullable — event attachment) + file.
 
 `GET /applications/:application_id/documents`  
 * List documents for the application.
@@ -131,19 +128,22 @@ These endpoints support the applicant–coordinator interaction loop.
 ### 4.5 Comments
 
 `POST /applications/:application_id/comments`  
-* Add a comment to a step or document.  
-* Body may include `step_instance_id` and optional `document_id`.
+* Add a comment to a step or a specific input field within a step.  
+* Body includes `step_instance_id` and optional `field_id` (null means step-level comment).
 
 `GET /applications/:application_id/comments`  
 * List comments for the application.
 
-### 4.6 External Status Updates
+### 4.6 Events
 
-`POST /applications/:application_id/external-status-updates`  
-* Coordinator records a new external authority update.
+`POST /applications/:application_id/events`  
+* Coordinator creates a new timeline event.
 
-`GET /applications/:application_id/external-status-updates`  
-* List external status updates.
+`GET /applications/:application_id/events`  
+* List events for the application's tracking timeline.
+
+`GET /applications/:application_id/events/:event_id`  
+* Fetch a single event including notes.
 
 ---
 
@@ -154,10 +154,11 @@ These endpoints support the applicant–coordinator interaction loop.
 ```json
 {
   "id": "workflow-123",
-  "name": "Visitor Visa",
+  "name": "Australian Visitor Visa Subclass 600",
   "version": "1.0",
   "coordinator_id": "user-456",
-  "metadata": { "country": "Australia" },
+  "visa_type": "Visitor Visa",
+  "target_country": "Australia",
   "steps": [
     {
       "step_id": "personal-info",
@@ -185,10 +186,7 @@ These endpoints support the applicant–coordinator interaction loop.
       "instance_id": "appstep-1",
       "workflow_step_id": "personal-info",
       "step_answers": { "first_name": "Aunty" },
-      "document_ids": ["doc-1"],
-      "comment_ids": ["comment-1"],
-      "status": "SUBMITTED",
-      "due_date": "2026-05-01T00:00:00Z"
+      "flag": null
     }
   ],
   "status": "IN_PROGRESS",
@@ -204,8 +202,8 @@ These endpoints support the applicant–coordinator interaction loop.
 * `Document` and `Comment` are stored separately and referenced by ID.  
 * Workflow ownership is defined by `Workflow.coordinator_id`.  
 * Application ownership is defined by `Application.applicant_id`.  
-* Coordinators can update application status and external status updates.  
-* State machine rules must be enforced (e.g., cannot approve a non‑submitted step).  
+* Coordinators can update application status and create Events on the tracking timeline.  
+* State machine rules must be enforced (e.g., cannot start review unless status is `SUBMITTED`).  
 
 ---
 
@@ -220,8 +218,8 @@ These endpoints support the applicant–coordinator interaction loop.
 | 409 | Invalid state transition |
 
 <u>Examples:</u>  
-* Cannot approve a step that is not `SUBMITTED`.  
-* Cannot submit a step missing required fields.  
+* Cannot start review unless application status is `SUBMITTED`.  
+* Cannot submit the application unless all required step inputs and documents are complete.  
 
 ---
 
@@ -232,7 +230,7 @@ This API design provides a clean, minimal, workflow‑driven interface that supp
 * Applicants complete steps  
 * Coordinators review and approve  
 * Documents and comments flow naturally  
-* External status is tracked  
+* Timeline events are tracked  
 * State transitions remain predictable and enforced  
 
 This document bridges the gap between the conceptual architecture and implementation.
