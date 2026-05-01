@@ -178,18 +178,27 @@ Chosen because they are:
 
 ### Framework
 
-Next.js (App Router)
+Next.js (Pages Router)
 
 Reasons:
 
 - File‑based routing  
-- Server components  
+- Client‑side rendering — no SSR needed  
 - Great DX  
 - Easy deployment on Vercel  
 
 ### Styling
 
 - Tailwind CSS  
+
+### UI Components
+
+- shadcn/ui — Tailwind‑based accessible components built on Radix UI primitives  
+- Copy‑paste components owned by the project — no library versioning  
+
+### Forms
+
+- react‑hook‑form + zod — form state management and schema validation  
 
 ### Data Fetching
 

@@ -173,7 +173,7 @@ frontend/
 │   ├── ui/
 │   ├── forms/
 │   ├── steps/
-│   └── layout/
+│   └── layouts/
 │
 ├── hooks/
 │   ├── useApplication.ts
@@ -218,7 +218,7 @@ components/
 ├── ui/                # Buttons, inputs, cards
 ├── forms/             # Form builders, field components
 ├── steps/             # Step viewer, step editor
-└── layout/            # Navigation, headers, wrappers
+└── layouts/            # Navigation, headers, wrappers
 ```
 
 ---

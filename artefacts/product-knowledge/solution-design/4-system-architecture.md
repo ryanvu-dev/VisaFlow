@@ -189,10 +189,11 @@ The frontend interacts with the API layer.
 
 ### 6.1 Technology (Recommended)
 
-- Next.js  
+- Next.js (Pages Router)  
 - Tailwind CSS  
+- shadcn/ui (Radix UI primitives)  
+- react‑hook‑form + zod  
 - React Query  
-- Mobile‑first  
 
 ### 6.2 Responsibilities
 
