@@ -45,7 +45,7 @@
 
 <br/>
 
-| [View assets](https://visaflow-project.notion.site/Project-Assets-349d20ffd42880a285c8f61a6be037b5) ➡️ |
+| [View assets](https://visaflow-project.notion.site/Design-Assets-34cd20ffd42880c287b1cea740bdb735) ➡️ |
 | --- |
 
 <br/>
